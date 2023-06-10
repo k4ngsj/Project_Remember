@@ -68,18 +68,18 @@ class VocabBook():
         자동으로 모든 process를 진행하는 함수. 클래스 매개변수로 autoProceed가 True이면 진행되도록 한다.
 
         '''
-        # if data_in_pdf:
-        #     self.pdf_to_image()
+        if data_in_pdf:
+            self.pdf_to_image()
         
-        # if self.labeldir == None:
-        #     self.label_data()
+        if self.labeldir == None:
+            self.label_data()
 
-        # if self.yamldir == None:
-        #     self.make_yaml()
+        if self.yamldir == None:
+            self.make_yaml()
 
-        # self.train()
-        # self.move_result()
-        # self.get_best_model()
+        self.train()
+        self.move_result()
+        self.get_best_model()
 
         self.best_model = YOLO('./best.pt')
         
