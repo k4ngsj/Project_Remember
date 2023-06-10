@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>set_chapter</class>
+ <widget class="QDialog" name="set_chapter">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>682</width>
+    <height>466</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Remember_set_chapter</string>
+  </property>
+  <widget class="QGraphicsView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>341</width>
+     <height>441</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>80</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>80</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Current Chapter :</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

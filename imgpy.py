@@ -28,7 +28,7 @@ class VocabImage():
         #self.is_labelled = 
         self.img_dir = img_dir
 
-        if self.vocab_mean_boundary != None:
+        if self.vocab_mean_boundary != None:#전역 좌우 바운더리 설정 있을 경우에 설정
             self.set_ocr_boundary()
             
         self.text_data = {}

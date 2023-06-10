@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>setup</class>
+ <widget class="QDialog" name="setup">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>405</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Remember_setup</string>
+  </property>
+  <widget class="QGroupBox" name="load_data_groupBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>50</y>
+     <width>331</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Load data</string>
+   </property>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Data type</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>331</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>56</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Data dir</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="load_data_button">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>10</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load data</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="data_dir_line">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>291</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="data_type_combo">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>30</y>
+      <width>221</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>image dir</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>pdf</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>pdf(OCR)</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>20</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Project Name</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="proj_name_line">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>20</y>
+     <width>231</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="label_data_groupBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>200</y>
+     <width>331</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Label data</string>
+   </property>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Label type</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget_3" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>331</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>56</width>
+       <height>12</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Label dir</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="load_label_data_button">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>10</y>
+       <width>111</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load label data</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="label_dir_line">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>291</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="label_type_combo">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>30</y>
+      <width>221</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>No label</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>directory (labesl)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>directory (labels+images)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>yaml directory</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="continueButton">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>350</y>
+     <width>261</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Continue</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

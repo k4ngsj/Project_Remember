@@ -9,11 +9,9 @@ MasterDir = 'D:/vocabbooks'
 
 class VocabBook():
     def __init__(self, book_name = 'MyVocab',#단어장 이름 -> 이걸로 폴더 만들어짐
-                  bookdir = None, datadir = None, yamldir = None, labeldir = None,#각종 경로, ocr data있는 pdf 경로 추가 필요
+                  bookdir = None, pdfdir = None, datadir = None, yamldir = None, labeldir = None,#각종 경로, ocr data있는 pdf 경로 추가 필요
                   vocab_mean_boundary = None, use_tesseract = False,#vocabmean boundary는 고정 좌우 좌표, use tesseract는 업데이트 하여 다양한 ocr 방법 쓰도록 수정
-                    pretrained=True, patience=800 ,epochs=800, optimizer = 'Adam', save_period=100, imgsz=720, batch=8, lr0 = 0.001, lrf=0.001,#수정해서 따로 입력되도록 할것임
-                    
-                    autoProceed = True, data_in_pdf = False, ) -> None:
+                  autoProceed = False, data_in_pdf = False, ) -> None:
         
 
 
@@ -81,7 +79,7 @@ class VocabBook():
         self.move_result()
         self.get_best_model()
 
-        self.best_model = YOLO('./best.pt')
+        self.best_model = YOLO('./best.pt')#테스트용으로 만든거
         
         self.make_img_list()
         torch.cuda.empty_cache()
@@ -181,7 +179,7 @@ class VocabBook():
         self.best_model = YOLO(self.result_dir+'/weights/best.pt')
         return self.best_model
 
-    def make_img_list(self):
+    def make_img_list(self, chapterlist = None):
         '''
         
         '''
@@ -189,9 +187,18 @@ class VocabBook():
         for page, file in enumerate(files):
             img_dir = os.path.join(self.datadir, file)
             imgname = os.path.splitext(file)[0]
-            imgCls = VocabImage(img_name = imgname, img_dir=img_dir, page=page+1)#file[0]는 0001.jpg -> 0001로 바뀜, dir은 주소
+            if chapterlist is not None:
+                chapter = chapterlist[page]
+            else:
+                chapter = None
+
+            imgCls = VocabImage(img_name = imgname, img_dir=img_dir, page=page+1, chapter = chapter)#file[0]는 0001.jpg -> 0001로 바뀜, dir은 주소
             self.imgClasses[imgname] = imgCls
         VocabImage.book_pages = len(self.imgClasses)
+
+    def set_chapters(self, chapterlist):
+        for page, imgCls in enumerate(self.imgClasses):
+            imgCls.set_chapter(chapterlist[page])
 
     def predict(self):
         predict_rslts = self.best_model.predict(self.datadir, save=False, save_txt=False, imgsz=720, conf=0.5)
@@ -211,6 +218,7 @@ class VocabBook():
             pd_text_data = self.imgClasses[img].run_ocr()
             self.text_datas = pd.concat([self.text_datas, pd_text_data], ignore_index=True)
         return self.text_datas
+    
     
 
     def extract_xls(self):
