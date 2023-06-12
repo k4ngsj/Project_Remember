@@ -2,20 +2,18 @@ import sys
 import os
 
 import threading
-# import tkinter as tk
-# from tkinter import ttk
+
 
 from vocabbook import VocabBook as VocabBook
 
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEvent, QObject
+from qtpy.QtGui import QPixmap
 
-# class uitk():
-#     def __init__(self, VocabBook) -> None:
-#         pass
 
 setup_ui = uic.loadUiType("setup.ui")[0]
+set_chapter_ui = uic.loadUiType("set_chapter.ui")[0]
 
 def check_valid_path(path, isfile):
     valid = True
@@ -37,12 +35,14 @@ def check_valid_path(path, isfile):
 
 
 
+
+
 #화면을 띄우는데 사용되는 Class 선언
 class qt_setup(QMainWindow, setup_ui) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)#ui 불러오기
-
+        self.setchap = None#다음 window
 
         #default setting
         self.project_name = 'My project'
@@ -120,28 +120,36 @@ class qt_setup(QMainWindow, setup_ui) :
         print("press_continue called")
 
 
-        if self.load_data_type == 0:
-            if self.load_label_type == 0:
-                self.myVocab = VocabBook(book_name = self.project_name, datadir=self.data_dir[self.load_data_type])
-            elif self.load_label_type == 3:
-                self.myVocab = VocabBook(book_name = self.project_name, datadir=self.data_dir[self.load_data_type], yamldir=self.label_dir[self.load_label_type])
-            else:
-                self.myVocab = VocabBook(book_name = self.project_name, datadir=self.data_dir[self.load_data_type], labeldir=self.label_dir[self.load_label_type])
+        # if self.load_data_type == 0:
+        #     if self.load_label_type == 0:
+        #         myVocabBook = VocabBook(book_name = self.project_name, datadir=self.data_dir[self.load_data_type])
+        #     elif self.load_label_type == 3:
+        #         myVocabBook = VocabBook(book_name = self.project_name, datadir=self.data_dir[self.load_data_type], yamldir=self.label_dir[self.load_label_type])
+        #     else:
+        #         myVocabBook = VocabBook(book_name = self.project_name, datadir=self.data_dir[self.load_data_type], labeldir=self.label_dir[self.load_label_type])
 
-        else:
-            if self.load_data_type == 2:
-                data_in_pdf = True
-            else:
-                data_in_pdf = False
+        # else:
+        #     if self.load_data_type == 2:
+        #         data_in_pdf = True
+        #     else:
+        #         data_in_pdf = False
             
-            if self.load_label_type == 0:
-                self.myVocab = VocabBook(book_name = self.project_name, pdfdir=self.data_dir[self.load_data_type], data_in_pdf=data_in_pdf)
-            elif self.load_label_type == 3:
-                self.myVocab = VocabBook(book_name = self.project_name, pdfdir=self.data_dir[self.load_data_type], yamldir=self.label_dir[self.load_label_type], data_in_pdf=data_in_pdf)
-            else:
-                self.myVocab = VocabBook(book_name = self.project_name, pdfdir=self.data_dir[self.load_data_type], labeldir=self.label_dir[self.load_label_type], data_in_pdf=data_in_pdf)
+        #     if self.load_label_type == 0:
+        #         myVocabBook = VocabBook(book_name = self.project_name, pdfdir=self.data_dir[self.load_data_type], data_in_pdf=data_in_pdf)
+        #     elif self.load_label_type == 3:
+        #         myVocabBook = VocabBook(book_name = self.project_name, pdfdir=self.data_dir[self.load_data_type], yamldir=self.label_dir[self.load_label_type], data_in_pdf=data_in_pdf)
+        #     else:
+        #         myVocabBook = VocabBook(book_name = self.project_name, pdfdir=self.data_dir[self.load_data_type], labeldir=self.label_dir[self.load_label_type], data_in_pdf=data_in_pdf)
 
-        
+        myVocabBook = VocabBook(book_name = self.project_name, datadir='D:/MVPtest')
+
+
+        if self.setchap ==None:
+            self.setchap = qt_setchap(myVocabBook, self)
+
+        self.setchap.show()
+        self.close()
+        del self
 
 
     def check_valid_path(self, path, isfile):
@@ -163,28 +171,131 @@ class qt_setup(QMainWindow, setup_ui) :
 
 
 
-'''
+
 #화면을 띄우는데 사용되는 Class 선언
-class qt_setup(QMainWindow, setup_ui) :
-    def __init__(self) :
+class qt_setchap(QMainWindow, set_chapter_ui):
+    def __init__(self, myVocabBook, qt_setup):
         super().__init__()
         self.setupUi(self)#ui 불러오기
+        self.set_focuspolicy()
 
-        self.set_events()
 
-    def keyPressEvent(self, e): #키가 눌러졌을 때 실행됨
-        if e.key() == Qt.Key_Escape:
-            print("esc pressed")
-        elif e.key() == Qt.Key_A:
-            print("A is pressed)")
-        else:
-            print("pressed key:",e.key())
 
-    def keyReleaseEvent(self,e): #키를 누른상태에서 뗏을 때 실행됨
-        print("released key:",e.key())
+        self.myVocabBook = myVocabBook
+        self.myVocabBook.Setup_Process(self.myVocabBook.data_in_pdf)
+        self.imgClsseskey = list(self.myVocabBook.imgClasses.keys())
+
+        self.curpage = 0
+        self.curchap = 0
+        self.book_pages = len(self.imgClsseskey)
+        self.chapterInfo = {}
+
+        self.page_num_label.setText('/' + str(self.book_pages))
+        self.change_image_by_page(self.curpage)
+
+        qt_setup = None
+        self.qt_train = None
+        self.continueButton.clicked.connect(self.continue_button_clicked)
+
+    def set_focuspolicy(self):
+        self.picture_label.setFocusPolicy(Qt.NoFocus)
+        self.page_label.setFocusPolicy(Qt.NoFocus)
+        self.page_num_label.setFocusPolicy(Qt.NoFocus)
+        self.current_chapter_label.setFocusPolicy(Qt.NoFocus)
+        self.instruction_textBrowser.setFocusPolicy(Qt.NoFocus)
+        self.continueButton.setFocusPolicy(Qt.NoFocus)
+
+        self.page_spinbox.setFocusPolicy(Qt.ClickFocus)
+        self.current_chapter_spinbox.setFocusPolicy(Qt.ClickFocus)
+    
+    def keyPressEvent(self, e):
+        pressed = e.key()
+        if pressed == 16777235:#up
+            self.curchap += 1
+            self.current_chapter_spinbox.setValue(self.curchap)
+        elif pressed == 16777237:#down
+            self.curchap -= 1
+            self.current_chapter_spinbox.setValue(self.curchap)
+
+        elif pressed == 16777234:#left
+            if self.curpage > 0:
+                self.curpage -= 1
+                try:
+                    temp = self.chapterInfo[self.imgClsseskey[self.curpage]]
+                    if temp != -1:
+                        self.curchap = temp
+                except:
+                    pass
+                self.current_chapter_spinbox.setValue(self.curchap)
+                self.page_spinbox.setValue(self.curpage)
+                self.change_image_by_page(self.curpage)
+        elif pressed == 16777236:#right
+            if self.curpage < self.book_pages-1:
+                self.chapterInfo[self.imgClsseskey[self.curpage]] = self.curchap
+                self.curpage += 1
+                try:
+                    temp = self.chapterInfo[self.imgClsseskey[self.curpage]]
+                    if temp != -1:
+                        self.curchap = temp
+                except:
+                    pass
+                self.current_chapter_spinbox.setValue(self.curchap)
+                self.page_spinbox.setValue(self.curpage)
+                self.change_image_by_page(self.curpage)
+
+        elif pressed == 32:#space
+            if self.curpage < self.book_pages-1:
+                self.chapterInfo[self.imgClsseskey[self.curpage]] = -1
+                self.curpage += 1
+                try:
+                    temp = self.chapterInfo[self.imgClsseskey[self.curpage]]
+                    if temp != -1:
+                        self.curchap = temp
+                except:
+                    pass
+                self.curchap += 1
+                self.current_chapter_spinbox.setValue(self.curchap)
+                self.page_spinbox.setValue(self.curpage)
+                self.change_image_by_page(self.curpage)
+
+   
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton and not (self.page_spinbox.underMouse() or self.current_chapter_spinbox.underMouse()):
+            self.page_spinbox.clearFocus()  # Clear focus from the spin box if clicked outside
+            self.current_chapter_spinbox.clearFocus()
+
+        super().mousePressEvent(event)  # Pass the event to the base class for default handling
+    
+    def change_image_by_page(self, page):
+        self.change_image(self.myVocabBook.imgClasses[self.imgClsseskey[page]].img_dir)
+
+    def change_image_by_filename(self, filename):
+        self.change_image(self.myVocabBook.imgClasses[filename].img_dir)
+
+    def change_image(self, imgdir):
+        #pixmap = QPixmap("D:/MVP/1110011.jpg")  # Replace with the path to your new image
+        #pixmap = QPixmap(self.myVocabBook.imgClasses['1110003'].img_dir)  # Replace with the path to your new image
+        pixmap = QPixmap(imgdir)  # Replace with the path to your new image
+        pixmap = pixmap.scaled(self.picture_label.size(), Qt.AspectRatioMode.KeepAspectRatio)
+        self.picture_label.setPixmap(pixmap)
+
+    def continue_button_clicked(self):
         
-        '''
-        
+        self.myVocabBook.set_chapters(self.chapterInfo)
+        for imgcls in self.myVocabBook.imgClasses:
+            print(self.myVocabBook.imgClasses[imgcls].chapter)
+
+        # if self.qt_train == None:
+        #     self.qt_train = qt_setchap(self.myVocabBook, self)
+
+        # self.qt_train.show()
+        # self.close()
+        # del self
+
+
+
+
+
 
 
 

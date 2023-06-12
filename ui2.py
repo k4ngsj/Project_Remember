@@ -1,39 +1,11 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget
-
-import sys
-
-from random import randint
-
-
-class AnotherWindow(QWidget):
-    """
-    This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window as we want.
-    """
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        self.label = QLabel("Another Window % d" % randint(0,100))
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+from vocabbook import VocabBook as VocabBook
+myVocabBook = VocabBook(book_name = 'test', datadir='D:/MVPtest')
+myVocabBook.Setup_Process(False)
+mydict = {'1110001': -1, '1110002': -1, '1110003': -1, '1110004': -1, '1110005': -1, '1110006': -1, '1110007': -1, '1110008': -1, '1110009': -1, '1110010': -1, '1110011': -1, '1110012': 1, '1110013': 1, '1110014': 1, '1110015': 1, '1110016': 1, '1110017': 1, '1110018': 1, '1110019': 1, '1110020': 1, '1110021': 1, '1110022': 1, '1110023': -1, '1110024': 2, '1110025': 2, '1110026': 2, '1110027': 2, '1110028': 2, '1110029': 2, '1110030': 2, '1110031': 2, '1110032': 2, '1110033': 2, '1110034': -1, '1110035': 3, '1110036': 3, '1110037': 3, '1110038': 3, '1110039': 3, '1110040': 3, '1110041': 3, '1110042': 3, '1110043': 3, '1110044': 3, '1110045': 3, '1110046': -1, '1110047': 4, '1110048': 4, '1110049': 4, '1110050': 4, '1110051': 4, '1110052': 4, '1110053': 4, '1110054': 4, '1110055': 4, '1110056': 4, '1110057': -1, '1110058': 5, '1110059': 5, '1110060': 5, '1110061': 5, '1110062': 5, '1110063': 5, '1110064': 5, '1110065': 5, '1110066': 5, '1110067': 5, '1110068': -1, '1110069': 6, '1110070': 6, '1110071': 6, '1110072': 6, '1110073': 6, '1110074': 6, '1110075': 6, '1110076': 6, '1110077': 6, '1110078': 6, '1110079': -1, '1110080': 7, '1110081': 7, '1110082': 7, '1110083': 7, '1110084': 7, '1110085': 7, '1110086': 7, '1110087': 7, '1110088': 7, '1110089': 7, '1110090': -1, '1110091': 8, '1110813': -1, '1110814': -1, '1110815': -1, '1110816': -1, '1110817': -1, '1110818': -1, '1110819': -1, '1110820': -1, '1110821': -1, '1110822': -1, '1110823': -1, '1110824': -1, '1110825': -1, '1110826': -1, '1110827': -1, '1110828': -1, '1110829': -1, '1110830': -1, '1110831': -1, '1110832': -1, '1110833': -1, '1110834': -1, '1110835': -1, '1110836': -1, '1110837': -1, '1110838': -1, '1110839': -1, '1110840': -1, '1110841': -1, '1110842': -1, '1110843': -1, '1110844': -1, '1110845': -1, '1110846': -1, '1110847': -1}
+myVocabBook.set_chapters(mydict)
 
 
-class MainWindow(QMainWindow):
+for imgcls in myVocabBook.imgClasses:
+    print(myVocabBook.imgClasses[imgcls].chapter)
 
-    def __init__(self):
-        super().__init__()
-        self.w = None  # No external window yet.
-        self.button = QPushButton("Push for Window")
-        self.button.clicked.connect(self.show_new_window)
-        self.setCentralWidget(self.button)
-
-    def show_new_window(self, checked):
-        if self.w is None:
-            self.w = AnotherWindow()
-        self.w.show()
-
-
-app = QApplication(sys.argv)
-w = MainWindow()
-w.show()
-app.exec()
+print(len(myVocabBook.imgClasses))

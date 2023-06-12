@@ -25,6 +25,7 @@ class VocabBook():
         self.model = None
         self.bestModel = None
 
+        self.data_in_pdf = data_in_pdf
         self.imgClasses = {}
         
         
@@ -61,6 +62,18 @@ class VocabBook():
         self.labeldir = labeldir
         self.yamldir = yamldir
 
+    def Setup_Process(self, data_in_pdf=False):
+        if data_in_pdf:
+            self.pdf_to_image()
+
+        self.make_img_list()
+        
+        if self.labeldir == None:
+            self.label_data()
+
+        if self.yamldir == None:
+            self.make_yaml()
+
     def Process(self, data_in_pdf):
         '''
         자동으로 모든 process를 진행하는 함수. 클래스 매개변수로 autoProceed가 True이면 진행되도록 한다.
@@ -68,6 +81,8 @@ class VocabBook():
         '''
         if data_in_pdf:
             self.pdf_to_image()
+
+        self.make_img_list()
         
         if self.labeldir == None:
             self.label_data()
@@ -81,8 +96,6 @@ class VocabBook():
 
         self.best_model = YOLO('./best.pt')#테스트용으로 만든거
         
-        self.make_img_list()
-        torch.cuda.empty_cache()
         self.predict()
         torch.cuda.empty_cache()
         self.run_ocrs()
@@ -123,8 +136,8 @@ class VocabBook():
             self.label_data()
         
         if self.yamldir == None:
-            os.mkdir(self.bookdir+'trainimg')
-            self.yamldir = self.bookdir+'trainimg'
+            os.mkdir(self.bookdir+'/trainimg')
+            self.yamldir = self.bookdir+'/trainimg'
             if not os.path.exists(self.yamldir):
                 print(self.yamldir,"created")
                 os.mkdir(self.yamldir)            
@@ -187,6 +200,7 @@ class VocabBook():
         for page, file in enumerate(files):
             img_dir = os.path.join(self.datadir, file)
             imgname = os.path.splitext(file)[0]
+            #print(imgname)
             if chapterlist is not None:
                 chapter = chapterlist[page]
             else:
@@ -196,9 +210,14 @@ class VocabBook():
             self.imgClasses[imgname] = imgCls
         VocabImage.book_pages = len(self.imgClasses)
 
-    def set_chapters(self, chapterlist):
-        for page, imgCls in enumerate(self.imgClasses):
-            imgCls.set_chapter(chapterlist[page])
+    def set_chapters(self, chapterdict):
+        # for page, imgCls in enumerate(self.imgClasses):
+        #     imgCls.set_chapter(chapterlist[page])
+        for filename in chapterdict:
+            try:
+                self.imgClasses[filename].set_chapter(chapterdict[filename])
+            except:
+                print('cant assign chapter to',filename)
 
     def predict(self):
         predict_rslts = self.best_model.predict(self.datadir, save=False, save_txt=False, imgsz=720, conf=0.5)
