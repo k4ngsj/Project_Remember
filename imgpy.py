@@ -1,6 +1,6 @@
 import cv2
 import pytesseract
-import easyocr
+
 import pandas as pd
 
 
@@ -16,9 +16,9 @@ class VocabImage():
     right_boundary = None
 
     use_tesseract = False
-    easyocr_reader = easyocr.Reader(['en', 'ko'], gpu=True)
+    easyocr_reader = None
 
-    book_pages = None
+    book_pages = None#단어장 총 페이지수
 
 
     def __init__(self, img_name, img_dir = None, page = 0, chapter = 0) -> None:
@@ -108,13 +108,15 @@ class VocabImage():
             #boundary top으로 sort한다
             #sort된것을 text_data에 저장한다
             mixed_text_data.append((wordset, boundary_top))
-            sorted_text_data = sorted(mixed_text_data, key=lambda x: x[1])
-            self.text_data = [x[0] for x in sorted_text_data]
-            
-            pd_text_data = self.data_to_pd(self.text_data)
 
             
-        return pd_text_data
+        sorted_text_data = sorted(mixed_text_data, key=lambda x: x[1])
+        self.text_data = [x[0] for x in sorted_text_data]
+        
+        self.pd_text_data = self.data_to_pd(self.text_data)
+
+            
+        return self.pd_text_data
     
 
     def data_to_pd(self, text_data):
@@ -148,4 +150,7 @@ class VocabImage():
         None
 
     def get_img_info(self):
+        if self.chapter == None:
+            print('chapter is none, to 0')
+            self.chapter = 0
         return (self.chapter, self.page, self.img_name)
